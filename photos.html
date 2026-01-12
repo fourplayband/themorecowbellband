@@ -105,8 +105,14 @@
         lightImg.src = currentImages[currentIndex];
         lightbox.classList.add('open');
         lightbox.setAttribute('aria-hidden','false');
+        document.body.classList.add('lightbox-open');
       }
-      function closeLightbox(){ lightbox.classList.remove('open'); lightbox.setAttribute('aria-hidden','true'); }
+      function closeLightbox(){ lightbox.classList.remove('open'); lightbox.setAttribute('aria-hidden','true'); document.body.classList.remove('lightbox-open'); }
+
+      function openLightboxBySrc(src){
+        currentImages = src ? [src] : [];
+        openLightbox(0);
+      }
       function prevImage(){ if(currentImages.length){ currentIndex = (currentIndex-1+currentImages.length)%currentImages.length; lightImg.src = currentImages[currentIndex]; } }
       function nextImage(){ if(currentImages.length){ currentIndex = (currentIndex+1)%currentImages.length; lightImg.src = currentImages[currentIndex]; } }
 
@@ -132,7 +138,16 @@
           label.textContent = gallery.year || '';
           div.appendChild(img);
           div.appendChild(label);
-          div.addEventListener('click', function(){ openGallery(gallery); });
+          div.addEventListener('click', function(){
+            // If gallery contains explicit images, open the gallery panel; otherwise open the cover directly in the lightbox
+            if(Array.isArray(gallery.images) && gallery.images.length){
+              openGallery(gallery);
+            } else if(gallery.cover){
+              openLightboxBySrc(gallery.cover);
+            } else {
+              openGallery(gallery);
+            }
+          });
           coversEl.appendChild(div);
         });
       }
