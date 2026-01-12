@@ -100,34 +100,49 @@
       let currentImages = [];
       let currentIndex = 0;
 
-      function openLightbox(index){
-        currentIndex = index;
-        console.log('openLightbox index=', index, 'images=', currentImages.length);
+      // central image display (wrap-around)
+      function showImage(index){
+        if(!currentImages || !currentImages.length) return;
+        currentIndex = ((index % currentImages.length) + currentImages.length) % currentImages.length;
+        console.log('showImage ->', currentIndex);
         lightImg.src = currentImages[currentIndex];
+        lightImg.setAttribute('data-index', currentIndex);
+      }
+
+      function openLightbox(index){
+        showImage(index);
         lightbox.classList.add('open');
         lightbox.setAttribute('aria-hidden','false');
         document.body.classList.add('lightbox-open');
       }
-      function closeLightbox(){ console.log('closeLightbox'); lightbox.classList.remove('open'); lightbox.setAttribute('aria-hidden','true'); document.body.classList.remove('lightbox-open'); }
+
+      function closeLightbox(){
+        console.log('closeLightbox');
+        lightbox.classList.remove('open');
+        lightbox.setAttribute('aria-hidden','true');
+        document.body.classList.remove('lightbox-open');
+      }
 
       function openLightboxBySrc(src){
         currentImages = src ? [src] : [];
         openLightbox(0);
       }
-      function prevImage(){ console.log('prevImage (before)=', currentIndex); if(currentImages.length){ currentIndex = (currentIndex-1+currentImages.length)%currentImages.length; lightImg.src = currentImages[currentIndex]; console.log('prevImage (after)=', currentIndex); } }
-      function nextImage(){ console.log('nextImage (before)=', currentIndex); if(currentImages.length){ currentIndex = (currentIndex+1)%currentImages.length; lightImg.src = currentImages[currentIndex]; console.log('nextImage (after)=', currentIndex); } }
+
+      function prevImage(){ console.log('prevImage'); if(currentImages.length){ showImage(currentIndex - 1); } }
+      function nextImage(){ console.log('nextImage'); if(currentImages.length){ showImage(currentIndex + 1); } }
 
       // make sure clicks on the nav buttons don't bubble and work on touch devices
       function bindNav(el, handler){
         if(!el) return;
-        function wrapped(e){ e.stopPropagation(); try{ e.preventDefault(); }catch(e){} handler(); console.log('nav fired', el && el.id); }
-        el.addEventListener('click', wrapped, {passive:false});
-        el.addEventListener('touchend', wrapped, {passive:false});
+        function wrapped(e){ e.stopPropagation(); try{ e.preventDefault(); }catch(err){} handler(); console.log('nav fired', el && el.id); }
+        el.addEventListener('click', wrapped, false);
+        el.addEventListener('touchend', wrapped, false);
       }
       bindNav(lightPrev, prevImage);
       bindNav(lightNext, nextImage);
       bindNav(lightClose, closeLightbox);
 
+      // clicking on backdrop closes lightbox
       lightbox.addEventListener('click', function(e){ if(e.target===lightbox) closeLightbox(); });
 
       // keyboard navigation: left/right/esc
@@ -137,6 +152,44 @@
         else if(e.key === 'ArrowRight') { e.preventDefault(); nextImage(); }
         else if(e.key === 'Escape') { e.preventDefault(); closeLightbox(); }
       });
+
+      // Touch swipe handling for mobile inside the lightbox
+      (function(){
+        let startX = 0, startY = 0, dx = 0, dy = 0, isMoving = false;
+        const threshold = 40; // px
+
+        function onTouchStart(e){
+          if(!lightbox.classList.contains('open')) return;
+          const t = e.touches && e.touches[0];
+          if(!t) return;
+          startX = t.clientX; startY = t.clientY; dx = 0; dy = 0; isMoving = true;
+        }
+        function onTouchMove(e){
+          if(!isMoving) return;
+          const t = e.touches && e.touches[0];
+          if(!t) return;
+          dx = t.clientX - startX; dy = t.clientY - startY;
+          // if horizontal movement, prevent vertical scroll
+          if(Math.abs(dx) > Math.abs(dy)){
+            try{ e.preventDefault(); }catch(err){}
+          }
+        }
+        function onTouchEnd(e){
+          if(!isMoving) return; isMoving = false;
+          if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > threshold){
+            if(dx < 0){ // swipe left => next
+              nextImage();
+            } else { // swipe right => prev
+              prevImage();
+            }
+          }
+          dx = dy = 0;
+        }
+
+        lightbox.addEventListener('touchstart', onTouchStart, {passive:false});
+        lightbox.addEventListener('touchmove', onTouchMove, {passive:false});
+        lightbox.addEventListener('touchend', onTouchEnd, {passive:false});
+      })();
 
       panelClose.addEventListener('click', function(){ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); });
 
