@@ -6,6 +6,24 @@
   <title>More Cowbell Band</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="nav.css">
+  <script>
+    // If Identity confirmation / invite token lands on the site root,
+    // forward the user to /admin/ preserving querystring or hash so Netlify CMS can complete the flow.
+    (function() {
+      try {
+        var q = window.location.search || '';
+        var h = window.location.hash || '';
+        var p = window.location.pathname || '';
+        var hasToken = /token|confirmation|invite/i.test(q + h) || /identity\/confirm|identity\/invite/i.test(p);
+        if (hasToken) {
+          var target = '/admin/' + q + h;
+          if (!p.startsWith('/admin')) {
+            window.location.replace(target);
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 
 <body class="bg-cover bg-center bg-fixed"
