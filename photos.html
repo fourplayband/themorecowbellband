@@ -116,10 +116,25 @@
       function prevImage(){ if(currentImages.length){ currentIndex = (currentIndex-1+currentImages.length)%currentImages.length; lightImg.src = currentImages[currentIndex]; } }
       function nextImage(){ if(currentImages.length){ currentIndex = (currentIndex+1)%currentImages.length; lightImg.src = currentImages[currentIndex]; } }
 
-      lightPrev.addEventListener('click', prevImage);
-      lightNext.addEventListener('click', nextImage);
-      lightClose.addEventListener('click', closeLightbox);
+      // make sure clicks on the nav buttons don't bubble and work on touch devices
+      function bindNav(el, handler){
+        if(!el) return;
+        el.addEventListener('click', function(e){ e.stopPropagation(); handler(); });
+        el.addEventListener('touchstart', function(e){ e.stopPropagation(); handler(); }, {passive:true});
+      }
+      bindNav(lightPrev, prevImage);
+      bindNav(lightNext, nextImage);
+      bindNav(lightClose, closeLightbox);
+
       lightbox.addEventListener('click', function(e){ if(e.target===lightbox) closeLightbox(); });
+
+      // keyboard navigation: left/right/esc
+      document.addEventListener('keydown', function(e){
+        if(!lightbox.classList.contains('open')) return;
+        if(e.key === 'ArrowLeft') { e.preventDefault(); prevImage(); }
+        else if(e.key === 'ArrowRight') { e.preventDefault(); nextImage(); }
+        else if(e.key === 'Escape') { e.preventDefault(); closeLightbox(); }
+      });
 
       panelClose.addEventListener('click', function(){ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); });
 
