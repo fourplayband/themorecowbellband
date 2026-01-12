@@ -6,19 +6,20 @@
   <title>More Cowbell Band</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="nav.css">
-  <script>
+    <script>
     // If Identity confirmation / invite token lands on the site root,
-    // forward the user to /admin/ with the querystring so Netlify CMS can complete the flow.
+    // forward the user to /admin/ preserving querystring or hash so Netlify CMS can complete the flow.
     (function() {
       try {
         var q = window.location.search || '';
+        var h = window.location.hash || '';
         var p = window.location.pathname || '';
-        // common token/query names used by Netlify Identity: "token", "confirmation_token", "invite", "invite_token"
-        var hasToken = /token|confirmation|invite/i.test(q) || /identity\/confirm|identity\/invite/i.test(p);
+        // Detect token in query or fragment (hash) or identity confirm path
+        var hasToken = /token|confirmation|invite/i.test(q + h) || /identity\/confirm|identity\/invite/i.test(p);
         if (hasToken) {
-          var target = '/admin/' + q + window.location.hash;
-          // Avoid redirect loop if already on /admin
+          var target = '/admin/' + q + h;
           if (!p.startsWith('/admin')) {
+            // use replace so back button doesn't loop
             window.location.replace(target);
           }
         }
