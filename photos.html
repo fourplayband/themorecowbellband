@@ -59,14 +59,108 @@
   <h1 class="text-5xl font-extrabold text-[#f7eadb] mb-10 tracking-wide">
     Photo Gallery
   </h1>
-
-  <!-- Cover / index photo for 2026 -->
-  <div class="photo-cover">
-    <div class="photo-frame" title="2026 Highlights">
-      <img src="assets/photos/cover-2026.svg" alt="2026 cover">
-      <div class="caption">2026 Highlights — More Cowbell Band</div>
+  <!-- Galleries list (populated by JS from /content/photos/index.json) -->
+  <div class="galleries">
+    <div id="gallery-covers" class="gallery-covers" aria-live="polite">
+      <!-- JS injects year covers here -->
     </div>
   </div>
+
+  <!-- Year gallery overlay -->
+  <div id="gallery-overlay" class="gallery-overlay" role="dialog" aria-hidden="true">
+    <div class="gallery-panel" role="document">
+      <button id="panel-close" class="panel-close">Close</button>
+      <h2 id="gallery-title">Gallery</h2>
+      <div id="gallery-grid" class="gallery-grid"></div>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <button class="nav prev" id="light-prev">‹</button>
+    <img id="light-img" src="" alt="">
+    <button class="nav next" id="light-next">›</button>
+    <button class="close" id="light-close">✕</button>
+  </div>
+
+  <script>
+    (function(){
+      const coversEl = document.getElementById('gallery-covers');
+      const overlay = document.getElementById('gallery-overlay');
+      const panelClose = document.getElementById('panel-close');
+      const grid = document.getElementById('gallery-grid');
+      const galleryTitle = document.getElementById('gallery-title');
+      const lightbox = document.getElementById('lightbox');
+      const lightImg = document.getElementById('light-img');
+      const lightPrev = document.getElementById('light-prev');
+      const lightNext = document.getElementById('light-next');
+      const lightClose = document.getElementById('light-close');
+
+      let currentImages = [];
+      let currentIndex = 0;
+
+      function openLightbox(index){
+        currentIndex = index;
+        lightImg.src = currentImages[currentIndex];
+        lightbox.classList.add('open');
+        lightbox.setAttribute('aria-hidden','false');
+      }
+      function closeLightbox(){ lightbox.classList.remove('open'); lightbox.setAttribute('aria-hidden','true'); }
+      function prevImage(){ if(currentImages.length){ currentIndex = (currentIndex-1+currentImages.length)%currentImages.length; lightImg.src = currentImages[currentIndex]; } }
+      function nextImage(){ if(currentImages.length){ currentIndex = (currentIndex+1)%currentImages.length; lightImg.src = currentImages[currentIndex]; } }
+
+      lightPrev.addEventListener('click', prevImage);
+      lightNext.addEventListener('click', nextImage);
+      lightClose.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', function(e){ if(e.target===lightbox) closeLightbox(); });
+
+      panelClose.addEventListener('click', function(){ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); });
+
+      function renderCovers(data){
+        // sort by year desc
+        data.galleries = data.galleries || [];
+        data.galleries.sort((a,b)=> (b.year||'').localeCompare(a.year||'', undefined, {numeric:true}));
+        data.galleries.forEach(function(gallery, idx){
+          const div = document.createElement('div');
+          div.className = 'gallery-cover';
+          const img = document.createElement('img');
+          img.src = gallery.cover || '';
+          img.alt = gallery.year + ' cover';
+          const label = document.createElement('div');
+          label.className = 'year-label';
+          label.textContent = gallery.year || '';
+          div.appendChild(img);
+          div.appendChild(label);
+          div.addEventListener('click', function(){ openGallery(gallery); });
+          coversEl.appendChild(div);
+        });
+      }
+
+      function openGallery(gallery){
+        currentImages = (gallery.images||[]).map(i=> typeof i === 'string' ? i : (i.image || ''));
+        galleryTitle.textContent = (gallery.year || 'Gallery');
+        grid.innerHTML = '';
+        currentImages.forEach(function(src, i){
+          const c = document.createElement('div'); c.className='card';
+          const im = document.createElement('img'); im.src = src; im.alt = gallery.year + ' photo '+(i+1);
+          im.addEventListener('click', function(){ openLightbox(i); });
+          c.appendChild(im); grid.appendChild(c);
+        });
+        overlay.classList.add('open'); overlay.setAttribute('aria-hidden','false');
+      }
+
+      // fetch the index JSON
+      fetch('/content/photos/index.json').then(r=>{
+        if(!r.ok) throw new Error('index not found');
+        return r.json();
+      }).then(data=>{
+        renderCovers(data);
+      }).catch(err=>{
+        coversEl.innerHTML = '<p style="color:#fff">No photo galleries found.</p>';
+        console.error(err);
+      });
+    })();
+  </script>
 
 </main>
 

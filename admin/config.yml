@@ -133,33 +133,36 @@ collections:
 
 
   # ======================
-  # Photos (一张照片一个条目；不做裁剪；小图同一张图即可)
+  # Photos (Photo gallery index)
+  # Single JSON index file that holds galleries per year. Each gallery contains a cover image and an array of image uploads.
+  # This makes it easy for the front-end to fetch /content/photos/index.json and render galleries.
   # ======================
-  - name: "photos"
-    label: "Photos"
-    folder: "content/photos"
-    create: true
-    format: "json"
-    extension: "json"
-    slug: "{{fields.date}}-{{slug}}"
-    sortable_fields: ["date", "title"]
-    fields:
-      - { label: "Title / Caption (optional)", name: "title", widget: "string", required: false }
-      - { label: "Image", name: "image", widget: "image" }
-
-      # 分类：Poster / Gig Photo（你之前提过要分区）
-      - label: "Category"
-        name: "category"
-        widget: "select"
-        options: ["posters", "gig_photos"]
-        default: "gig_photos"
-
-      - label: "Date (optional)"
-        name: "date"
-        widget: "datetime"
-        required: false
-        format: "YYYY-MM-DD"
-        time_format: false
+  - name: "photo_galleries"
+    label: "Photo Galleries (index)"
+    files:
+      - file: "content/photos/index.json"
+        label: "Photo Galleries Index"
+        name: "photo_galleries_index"
+        fields:
+          - label: "Galleries"
+            name: "galleries"
+            widget: "list"
+            required: false
+            summary: "{{fields.year}}"
+            fields:
+              - { label: "Year", name: "year", widget: "string" }
+              - label: "Cover Image"
+                name: "cover"
+                widget: "image"
+                required: true
+              - label: "Gallery Images"
+                name: "images"
+                widget: "list"
+                required: false
+                field:
+                  label: "Image"
+                  name: "image"
+                  widget: "image"
 
 
   # ======================
