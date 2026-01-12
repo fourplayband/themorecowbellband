@@ -102,17 +102,26 @@
 
       // central image display (wrap-around)
       function showImage(index){
+        // if currentImages is empty or has only one entry, try to populate it from the gallery DOM
         if(!currentImages || !currentImages.length){
-          console.log('showImage: no images', currentImages && currentImages.length);
-          return;
+          console.log('showImage: no images in array, attempting DOM fallback');
+          try{
+            const imgs = Array.from(document.querySelectorAll('#gallery-grid img')).map(i=>i.src).filter(Boolean);
+            if(imgs && imgs.length){
+              currentImages = imgs;
+              console.log('showImage: populated currentImages from DOM fallback, count=', currentImages.length);
+            }
+          }catch(e){ console.warn('showImage: DOM fallback failed', e); }
+          if(!currentImages || !currentImages.length){
+            console.log('showImage: still no images, aborting');
+            return;
+          }
         }
         currentIndex = ((index % currentImages.length) + currentImages.length) % currentImages.length;
         console.log('showImage ->', currentIndex, 'of', currentImages.length);
-        // log a short preview of the first few entries for debugging
         try{ console.log('images preview', currentImages.slice(0,6)); }catch(e){}
         lightImg.src = currentImages[currentIndex];
         lightImg.setAttribute('data-index', currentIndex);
-        // ensure image isn't draggable to avoid accidental behavior
         lightImg.draggable = false;
       }
 
