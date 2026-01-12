@@ -102,11 +102,18 @@
 
       // central image display (wrap-around)
       function showImage(index){
-        if(!currentImages || !currentImages.length) return;
+        if(!currentImages || !currentImages.length){
+          console.log('showImage: no images', currentImages && currentImages.length);
+          return;
+        }
         currentIndex = ((index % currentImages.length) + currentImages.length) % currentImages.length;
-        console.log('showImage ->', currentIndex);
+        console.log('showImage ->', currentIndex, 'of', currentImages.length);
+        // log a short preview of the first few entries for debugging
+        try{ console.log('images preview', currentImages.slice(0,6)); }catch(e){}
         lightImg.src = currentImages[currentIndex];
         lightImg.setAttribute('data-index', currentIndex);
+        // ensure image isn't draggable to avoid accidental behavior
+        lightImg.draggable = false;
       }
 
       function openLightbox(index){
@@ -223,7 +230,12 @@
       }
 
       function openGallery(gallery){
-        currentImages = (gallery.images||[]).map(i=> typeof i === 'string' ? i : (i.image || ''));
+        // normalize image entries: accept string paths or objects with common keys
+        currentImages = (gallery.images||[]).map(function(i){
+          if(typeof i === 'string') return i;
+          if(!i || typeof i !== 'object') return '';
+          return i.image || i.src || i.path || i.url || '';
+        }).filter(Boolean);
         galleryTitle.textContent = (gallery.year || 'Gallery');
         grid.innerHTML = '';
         currentImages.forEach(function(src, i){
