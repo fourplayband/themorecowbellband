@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>More Cowbell Band</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="nav.css">
+</head>
+
+<body class="bg-cover bg-center bg-fixed"
+      style="background-image: url('assets/hero-bg.jpg');">
+
+<!-- HEADER -->
+<header class="fixed top-0 left-0 w-full bg-gradient-to-b from-[#4b3223]/95 to-[#4b3223]/85 shadow-lg backdrop-blur z-50">
+  <div class="max-w-[1600px] mx-auto px-8 py-3 flex items-center justify-between">
+
+    <div class="flex items-center gap-2 whitespace-nowrap">
+      <img src="assets/logo-cowbell.png" class="h-14 md:h-16" style="filter: brightness(0) invert(1) opacity(0.92);" />
+      <span class="text-2xl md:text-3xl font-extrabold text-[#f7eadb] tracking-wide">MORE COWBELL BAND</span>
+    </div>
+
+    <button id="nav-toggle" class="p-2 mc-nav-toggle" aria-label="Open menu" aria-expanded="false">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+
+    <nav id="desktop-nav" class="hidden md:flex items-center gap-6 text-lg md:text-xl font-semibold text-[#e9d8c8] whitespace-nowrap">
+      <a href="index.html" class="px-3 py-2 hover:bg-[#8b4a2f]/40 rounded-lg">Home</a>
+      <a href="members.html" class="px-3 py-2 hover:bg-[#8b4a2f]/30 rounded-lg">Members</a>
+      <a href="artists.html" class="px-3 py-2 hover:bg-[#8b4a2f]/30 rounded-lg">Artists We Cover</a>
+      <a href="videos.html" class="px-3 py-2 hover:bg-[#8b4a2f]/30 rounded-lg">Videos</a>
+      <a href="photos.html" class="px-3 py-2 hover:bg-[#8b4a2f]/30 rounded-lg">Photos</a>
+      <a href="schedule.html" class="px-3 py-2 hover:bg-[#8b4a2f]/30 rounded-lg">Schedule</a>
+      <a href="contact.html" class="px-5 py-2 bg-[#8b4a2f]/40 rounded-xl text-[#f7eadb]">Contact</a>
+    </nav>
+
+  </div>
+
+  <div id="mobile-nav" class="md:hidden hidden mc-mobile-nav">
+    <div class="mc-nav-inner">
+      <div class="px-2 py-1 flex flex-col gap-2">
+      <a href="index.html" class="py-2 px-3 rounded hover:bg-[#8b4a2f]/30 text-[#f7eadb]">Home</a>
+      <a href="members.html" class="py-2 px-3 rounded hover:bg-[#8b4a2f]/30 text-[#f7eadb]">Members</a>
+      <a href="artists.html" class="py-2 px-3 rounded hover:bg-[#8b4a2f]/30 text-[#f7eadb]">Artists We Cover</a>
+      <a href="videos.html" class="py-2 px-3 rounded hover:bg-[#8b4a2f]/30 text-[#f7eadb]">Videos</a>
+      <a href="photos.html" class="py-2 px-3 rounded hover:bg-[#8b4a2f]/30 text-[#f7eadb]">Photos</a>
+      <a href="schedule.html" class="py-2 px-3 rounded hover:bg-[#8b4a2f]/30 text-[#f7eadb]">Schedule</a>
+      <a href="contact.html" class="py-2 px-3 rounded bg-[#8b4a2f]/40 text-[#f7eadb]">Contact</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="flex flex-col justify-center items-center h-screen text-center px-4"
+     style="text-shadow:0 0 12px rgba(0,0,0,0.6);">
+
+  <img src="assets/logo-cowbell.png" alt="MORE COWBELL BAND" class="opacity-100 mb-6" style="height:453px; width:auto; margin-top:80px; opacity:0.9;" />
+
+  
+
+  <p class="text-xl md:text-2xl text-[#f7eadb]/90 mt-2" style="margin-top:-8px;">
+    Live Country Music • Bay Area
+  </p>
+
+  <div class="flex gap-6 mt-8" style="margin-top:6px;">
+    <a href="contact.html" class="px-8 py-3 text-xl bg-[#8b4a2f] text-white rounded-xl shadow">
+      Contact
+    </a>
+    <a href="videos.html" class="px-8 py-3 text-xl bg-[#8b4a2f]/60 text-[#f7eadb] rounded-xl shadow">
+      Watch Videos
+    </a>
+  </div>
+
+</div>
+
+<!-- Index 专用 footer（保留你之前的设计） -->
+<footer class="w-full bg-[#4b3223]/80 text-center py-6">
+  <p class="text-[#f7eadb] text-lg opacity-80">© 2025 More Cowbell Band — All rights reserved.</p>
+</footer>
+
+<script src="nav.js"></script>
+
+</body>
+</html>
