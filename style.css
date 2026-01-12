@@ -145,3 +145,15 @@ body.lightbox-open { overflow: hidden; }
   /* remove any fixed-height containers that may squeeze the hero on mobile */
   .hero { padding: 28px 16px; }
 }
+
+/* Ensure long artist names stay on a single line on small screens */
+@media (max-width: 480px) {
+  .artists-list { padding-left: 0.6rem; padding-right: 0.6rem; }
+  .artists-list li {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* if it truly overflows, truncate gracefully */
+    font-size: 1.05rem; /* slightly reduce size to help fit */
+    line-height: 1.1;
+  }
+}
