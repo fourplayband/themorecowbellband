@@ -22,5 +22,37 @@
     </script>
 
     <script src="https://unpkg.com/netlify-cms@^2.10.0/dist/netlify-cms.js"></script>
+    <script>
+      // small helper: visible login button to open the Netlify Identity modal
+      function _mcbAddLoginButton() {
+        try {
+          if (!window.netlifyIdentity) return;
+          if (document.getElementById('mcb-identity-login')) return;
+          const btn = document.createElement('button');
+          btn.id = 'mcb-identity-login';
+          btn.textContent = 'Log in';
+          Object.assign(btn.style, {
+            position: 'fixed',
+            top: '12px',
+            right: '12px',
+            zIndex: 99999,
+            padding: '6px 10px',
+            background: '#111',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          });
+          btn.onclick = () => window.netlifyIdentity.open();
+          document.body.appendChild(btn);
+        } catch (e) {}
+      }
+
+      if (window.netlifyIdentity) {
+        _mcbAddLoginButton();
+      } else {
+        window.addEventListener('load', _mcbAddLoginButton);
+      }
+    </script>
   </body>
 </html>
