@@ -78,10 +78,10 @@
 
   <!-- Lightbox -->
   <div id="lightbox" class="lightbox" aria-hidden="true">
-    <button class="nav prev" id="light-prev">‹</button>
+    <button class="nav prev" id="light-prev" type="button" aria-label="Previous photo">‹</button>
     <img id="light-img" src="" alt="">
-    <button class="nav next" id="light-next">›</button>
-    <button class="close" id="light-close">✕</button>
+    <button class="nav next" id="light-next" type="button" aria-label="Next photo">›</button>
+    <button class="close" id="light-close" type="button" aria-label="Close lightbox">✕</button>
   </div>
 
   <script>
@@ -102,25 +102,27 @@
 
       function openLightbox(index){
         currentIndex = index;
+        console.log('openLightbox index=', index, 'images=', currentImages.length);
         lightImg.src = currentImages[currentIndex];
         lightbox.classList.add('open');
         lightbox.setAttribute('aria-hidden','false');
         document.body.classList.add('lightbox-open');
       }
-      function closeLightbox(){ lightbox.classList.remove('open'); lightbox.setAttribute('aria-hidden','true'); document.body.classList.remove('lightbox-open'); }
+      function closeLightbox(){ console.log('closeLightbox'); lightbox.classList.remove('open'); lightbox.setAttribute('aria-hidden','true'); document.body.classList.remove('lightbox-open'); }
 
       function openLightboxBySrc(src){
         currentImages = src ? [src] : [];
         openLightbox(0);
       }
-      function prevImage(){ if(currentImages.length){ currentIndex = (currentIndex-1+currentImages.length)%currentImages.length; lightImg.src = currentImages[currentIndex]; } }
-      function nextImage(){ if(currentImages.length){ currentIndex = (currentIndex+1)%currentImages.length; lightImg.src = currentImages[currentIndex]; } }
+      function prevImage(){ console.log('prevImage (before)=', currentIndex); if(currentImages.length){ currentIndex = (currentIndex-1+currentImages.length)%currentImages.length; lightImg.src = currentImages[currentIndex]; console.log('prevImage (after)=', currentIndex); } }
+      function nextImage(){ console.log('nextImage (before)=', currentIndex); if(currentImages.length){ currentIndex = (currentIndex+1)%currentImages.length; lightImg.src = currentImages[currentIndex]; console.log('nextImage (after)=', currentIndex); } }
 
       // make sure clicks on the nav buttons don't bubble and work on touch devices
       function bindNav(el, handler){
         if(!el) return;
-        el.addEventListener('click', function(e){ e.stopPropagation(); handler(); });
-        el.addEventListener('touchstart', function(e){ e.stopPropagation(); handler(); }, {passive:true});
+        function wrapped(e){ e.stopPropagation(); try{ e.preventDefault(); }catch(e){} handler(); console.log('nav fired', el && el.id); }
+        el.addEventListener('click', wrapped, {passive:false});
+        el.addEventListener('touchend', wrapped, {passive:false});
       }
       bindNav(lightPrev, prevImage);
       bindNav(lightNext, nextImage);
