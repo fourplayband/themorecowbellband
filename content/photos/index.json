@@ -6,7 +6,10 @@
     },
     {
       "cover": "/assets/uploads/morecowbell-banner.jpg",
-      "year": "2026-Banner"
+      "year": "2026-Banner",
+      "images": [
+        "/assets/uploads/meenars_11x17_morecowbell_1-16-26.jpg"
+      ]
     }
   ]
 }
