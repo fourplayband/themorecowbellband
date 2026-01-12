@@ -78,6 +78,25 @@
 </footer>
 
 <script src="nav.js"></script>
+<script>
+  // Prevent navigation to Netlify CMS from the photos page (defensive)
+  (function(){
+    try{
+      document.addEventListener('click', function(e){
+        var a = e.target.closest && e.target.closest('a');
+        if(!a) return;
+        try{
+          if(a.href && a.href.indexOf('/admin') !== -1){
+            e.preventDefault();
+            e.stopPropagation();
+            // optionally show a brief message
+            console.log('Blocked navigation to CMS from photos page');
+          }
+        }catch(err){}
+      }, true);
+    }catch(err){}
+  })();
+</script>
 
 </body>
 </html>
