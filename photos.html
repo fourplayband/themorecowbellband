@@ -78,11 +78,11 @@
 
   <!-- Lightbox -->
   <div id="lightbox" class="lightbox-overlay" aria-hidden="true">
-    <div class="lightbox-content" id="lightbox-content">
-      <button class="lightbox-nav prev" id="light-prev" type="button" aria-label="Previous photo">‹</button>
-      <img id="light-img" src="" alt="">
-      <button class="lightbox-nav next" id="light-next" type="button" aria-label="Next photo">›</button>
-      <button class="lightbox-close" id="light-close" type="button" aria-label="Close lightbox">✕</button>
+    <div class="lightbox-inner" id="lightbox-inner">
+      <button id="lightbox-prev" type="button" aria-label="Previous photo">‹</button>
+      <img id="lightbox-img" src="" alt="">
+      <button id="lightbox-next" type="button" aria-label="Next photo">›</button>
+      <button id="lightbox-close" type="button" aria-label="Close lightbox">✕</button>
     </div>
   </div>
 
@@ -94,11 +94,11 @@
       const grid = document.getElementById('gallery-grid');
       const galleryTitle = document.getElementById('gallery-title');
       const lightbox = document.getElementById('lightbox');
-      const lightboxContent = document.getElementById('lightbox-content');
-      const lightImg = document.getElementById('light-img');
-      const lightPrev = document.getElementById('light-prev');
-      const lightNext = document.getElementById('light-next');
-      const lightClose = document.getElementById('light-close');
+      const lightboxInner = document.getElementById('lightbox-inner');
+      const lightboxImg = document.getElementById('lightbox-img');
+      const lightboxPrev = document.getElementById('lightbox-prev');
+      const lightboxNext = document.getElementById('lightbox-next');
+      const lightboxClose = document.getElementById('lightbox-close');
 
       let currentImages = [];
       let currentIndex = 0;
@@ -123,48 +123,62 @@
         currentIndex = ((index % currentImages.length) + currentImages.length) % currentImages.length;
         console.log('showImage ->', currentIndex, 'of', currentImages.length);
         try{ console.log('images preview', currentImages.slice(0,6)); }catch(e){}
-        lightImg.src = currentImages[currentIndex];
-        lightImg.setAttribute('data-index', currentIndex);
-        lightImg.draggable = false;
+        lightboxImg.src = currentImages[currentIndex];
+        lightboxImg.setAttribute('data-index', currentIndex);
+        lightboxImg.draggable = false;
       }
 
       function openLightbox(index){
+        // if the gallery overlay is open, close it so it doesn't show underneath
+        try{ if(overlay && overlay.classList.contains('open')){ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); document.body.classList.remove('gallery-open'); document.documentElement.style.removeProperty('--gallery-offset-top'); } }catch(e){}
         showImage(index);
+        // ensure overlay sits above header and center content
         lightbox.classList.add('open');
         lightbox.setAttribute('aria-hidden','false');
         document.body.classList.add('lightbox-open');
+        // also focus for keyboard support
+        try{ lightbox.focus(); }catch(e){}
       }
 
       function closeLightbox(){
-        console.log('closeLightbox');
         lightbox.classList.remove('open');
         lightbox.setAttribute('aria-hidden','true');
         document.body.classList.remove('lightbox-open');
       }
 
       function openLightboxBySrc(src){
-        currentImages = src ? [src] : [];
+        // If gallery-grid exists, try to include its images as the set; otherwise use single src
+        try{
+          const imgs = Array.from(document.querySelectorAll('#gallery-grid img')).map(i=>i.src).filter(Boolean);
+          if(imgs && imgs.length){
+            // place the src as the first image if not present
+            currentImages = imgs.slice();
+            if(src && currentImages.indexOf(src) === -1) currentImages.unshift(src);
+          } else {
+            currentImages = src ? [src] : [];
+          }
+        }catch(e){ currentImages = src ? [src] : []; }
         openLightbox(0);
       }
 
-      function prevImage(){ console.log('prevImage'); if(currentImages.length){ showImage(currentIndex - 1); } }
-      function nextImage(){ console.log('nextImage'); if(currentImages.length){ showImage(currentIndex + 1); } }
+      function prevImage(){ if(currentImages && currentImages.length){ showImage(currentIndex - 1); } }
+      function nextImage(){ if(currentImages && currentImages.length){ showImage(currentIndex + 1); } }
 
       // make sure clicks on the nav buttons don't bubble and work on touch devices
       function bindNav(el, handler){
         if(!el) return;
-        function wrapped(e){ e.stopPropagation(); try{ e.preventDefault(); }catch(err){} handler(); console.log('nav fired', el && el.id); }
+        function wrapped(e){ e.stopPropagation(); try{ e.preventDefault(); }catch(err){} handler(); }
         el.addEventListener('click', wrapped, false);
         el.addEventListener('touchend', wrapped, false);
       }
-      bindNav(lightPrev, prevImage);
-      bindNav(lightNext, nextImage);
-      bindNav(lightClose, closeLightbox);
+      bindNav(lightboxPrev, prevImage);
+      bindNav(lightboxNext, nextImage);
+      bindNav(lightboxClose, closeLightbox);
 
       // clicking on backdrop closes lightbox; clicks inside content should not bubble
-      if(lightboxContent){
-        lightboxContent.addEventListener('click', function(e){ e.stopPropagation(); });
-        lightboxContent.addEventListener('touchstart', function(e){ e.stopPropagation(); }, {passive:false});
+      if(lightboxInner){
+        lightboxInner.addEventListener('click', function(e){ e.stopPropagation(); });
+        lightboxInner.addEventListener('touchstart', function(e){ e.stopPropagation(); }, {passive:false});
       }
       lightbox.addEventListener('click', function(e){ if(e.target===lightbox) closeLightbox(); });
 
@@ -179,7 +193,7 @@
       // Touch swipe handling for mobile inside the lightbox
       (function(){
         let startX = 0, startY = 0, dx = 0, dy = 0, isMoving = false;
-        const threshold = 40; // px
+        const threshold = 50; // px - per spec
 
         function onTouchStart(e){
           if(!lightbox.classList.contains('open')) return;
@@ -192,7 +206,6 @@
           const t = e.touches && e.touches[0];
           if(!t) return;
           dx = t.clientX - startX; dy = t.clientY - startY;
-          // if horizontal movement, prevent vertical scroll
           if(Math.abs(dx) > Math.abs(dy)){
             try{ e.preventDefault(); }catch(err){}
           }
@@ -200,21 +213,18 @@
         function onTouchEnd(e){
           if(!isMoving) return; isMoving = false;
           if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > threshold){
-            if(dx < 0){ // swipe left => next
-              nextImage();
-            } else { // swipe right => prev
-              prevImage();
-            }
+            if(dx < 0){ nextImage(); } else { prevImage(); }
           }
           dx = dy = 0;
         }
 
-        lightbox.addEventListener('touchstart', onTouchStart, {passive:false});
-        lightbox.addEventListener('touchmove', onTouchMove, {passive:false});
-        lightbox.addEventListener('touchend', onTouchEnd, {passive:false});
+        // Attach to inner so header taps don't interfere
+        (lightboxInner || lightbox).addEventListener('touchstart', onTouchStart, {passive:false});
+        (lightboxInner || lightbox).addEventListener('touchmove', onTouchMove, {passive:false});
+        (lightboxInner || lightbox).addEventListener('touchend', onTouchEnd, {passive:false});
       })();
 
-      panelClose.addEventListener('click', function(){ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); });
+      panelClose.addEventListener('click', function(){ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); try{ document.body.classList.remove('gallery-open'); document.documentElement.style.removeProperty('--gallery-offset-top'); }catch(e){} });
 
       function renderCovers(data){
         // sort by year desc
@@ -260,6 +270,14 @@
           im.addEventListener('click', function(){ openLightbox(i); });
           c.appendChild(im); grid.appendChild(c);
         });
+        // ensure the gallery panel sits below the fixed header by measuring header height
+        try{
+          const hdr = document.querySelector('header');
+          let h = 0;
+          if(hdr) h = Math.ceil(hdr.getBoundingClientRect().height);
+          document.documentElement.style.setProperty('--gallery-offset-top', h + 'px');
+          document.body.classList.add('gallery-open');
+        }catch(err){ }
         overlay.classList.add('open'); overlay.setAttribute('aria-hidden','false');
       }
 
