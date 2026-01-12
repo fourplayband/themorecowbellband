@@ -2,7 +2,8 @@ backend:
   name: git-gateway
   branch: main   # 如果你的默认分支是 master，就改成 master
 
-local_backend: true
+# Set to false for production on Netlify so the git-gateway backend is used.
+local_backend: false
 
 media_folder: "assets/uploads"
 public_folder: "/assets/uploads"
