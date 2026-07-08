@@ -2,7 +2,8 @@
   "galleries": [
     {
       "year": "2026",
-      "cover": "/assets/uploads/band-photo-brighten.jpg"
+      "cover": "/assets/uploads/band-photo-brighten.jpg",
+      "images": []
     },
     {
       "cover": "/assets/uploads/morecowbell-banner.jpg",
@@ -10,6 +11,18 @@
       "images": [
         "/assets/uploads/meenars_11x17_morecowbell_1-16-26.jpg"
       ]
+    },
+    {
+      "year": "MoreCowbell 2026 @ Wild Idol, Byron CA",
+      "images": [
+        "/assets/uploads/band-photo.jpg",
+        "/assets/uploads/wild-idol-2.jpg",
+        "/assets/uploads/wild-idol-4.jpg",
+        "/assets/uploads/wild-idol-3.jpg",
+        "/assets/uploads/wild-idol-5.jpg",
+        "/assets/uploads/wild-idol-1.jpg"
+      ],
+      "cover": "/assets/uploads/band-photo.jpg"
     }
   ]
 }
