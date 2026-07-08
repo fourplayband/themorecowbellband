@@ -68,6 +68,7 @@ body, html {
 .gallery-covers { display: grid; gap: 16px; grid-template-columns: repeat(3, 1fr); }
 .gallery-cover { cursor: pointer; position: relative; overflow: hidden; border-radius: 8px; }
 .gallery-cover img { width: 100%; height: 220px; object-fit: cover; display:block; }
+.photo-cover-img { object-fit: cover; object-position: top center; }
 .gallery-cover .year-label { position: absolute; left: 12px; bottom: 12px; background: rgba(0,0,0,0.5); color:#fff; padding:6px 10px; border-radius:6px; font-weight:700; }
 
 @media (max-width: 1024px) {

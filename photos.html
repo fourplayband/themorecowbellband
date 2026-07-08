@@ -236,6 +236,7 @@
           const img = document.createElement('img');
           img.src = gallery.cover || '';
           img.alt = gallery.year + ' cover';
+          img.className = 'photo-cover-img';
           const label = document.createElement('div');
           label.className = 'year-label';
           label.textContent = gallery.year || '';
