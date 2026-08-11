@@ -94,8 +94,8 @@ body, html {
   margin-top: calc(var(--gallery-offset-top, 40px) + 8px); /* push panel below header */
 }
 .gallery-grid { display:grid; gap:10px; grid-template-columns: repeat(3, 1fr); }
-.gallery-grid .card { background: rgba(0, 0, 0, 0.35); overflow:hidden; border-radius:6px; aspect-ratio: 4 / 3; }
-.gallery-grid img { width:100%; height:100%; object-fit:contain; object-position: center center; display:block; }
+.gallery-grid .card { background: rgba(0, 0, 0, 0.35); overflow:hidden; border-radius:6px; aspect-ratio: 1 / 1; }
+.gallery-grid img { width:100%; height:100%; object-fit:cover; object-position: center center; display:block; }
 .panel-close { position: absolute; right: 24px; top: 18px; background:#111;color:#fff;border:none;padding:8px 10px;border-radius:4px; cursor:pointer; }
 
 @media (max-width: 1024px) { .gallery-grid { grid-template-columns: repeat(2,1fr); } }
