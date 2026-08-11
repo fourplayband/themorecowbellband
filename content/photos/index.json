@@ -25,6 +25,20 @@
         "/assets/uploads/wild-idol-1.jpg"
       ],
       "cover": "/assets/uploads/band-photo.jpg"
+    },
+    {
+      "year": "Stampede-2026",
+      "cover": "/assets/uploads/img_3213.jpg",
+      "images": [
+        "/assets/uploads/1.jpg",
+        "/assets/uploads/img_2422.jpg",
+        "/assets/uploads/img_2428.jpg",
+        "/assets/uploads/img_2453.jpg",
+        "/assets/uploads/img_2468.jpg",
+        "/assets/uploads/img_3213.jpg",
+        "/assets/uploads/img_8275.jpg",
+        "/assets/uploads/ylfa9909.jpg"
+      ]
     }
   ]
 }
