@@ -11,6 +11,18 @@
         img.src = 'assets/photos/' + fn;
         img.alt = fn;
         img.className = 'mb-4 rounded-xl shadow w-full block';
+
+        // orientation detection for thumbnails (portrait/landscape/square)
+        function markOrientation(i){
+          try{
+            if(!i.naturalWidth || !i.naturalHeight) return;
+            if(i.naturalHeight > i.naturalWidth) i.classList.add('portrait');
+            else if(i.naturalHeight < i.naturalWidth) i.classList.add('landscape');
+            else i.classList.add('square');
+          }catch(e){}
+        }
+        img.addEventListener('load', function(){ markOrientation(img); });
+        if(img.complete) markOrientation(img);
         var wrapper = document.createElement('div');
         wrapper.className = 'photo-item';
         wrapper.style.breakInside = 'avoid';

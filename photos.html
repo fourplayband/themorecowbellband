@@ -267,8 +267,25 @@
         grid.innerHTML = '';
         currentImages.forEach(function(src, i){
           const c = document.createElement('div'); c.className='card';
-          const im = document.createElement('img'); im.src = src; im.alt = gallery.year + ' photo '+(i+1);
+          const im = document.createElement('img');
+          im.src = src;
+          im.alt = gallery.year + ' photo '+(i+1);
+          // add click to open lightbox
           im.addEventListener('click', function(){ openLightbox(i); });
+
+          // orientation detection: add portrait/landscape/square class after image loads
+          function markOrientation(img){
+            try{
+              if(!img.naturalWidth || !img.naturalHeight) return;
+              if(img.naturalHeight > img.naturalWidth) img.classList.add('portrait');
+              else if(img.naturalHeight < img.naturalWidth) img.classList.add('landscape');
+              else img.classList.add('square');
+            }catch(e){ }
+          }
+          im.addEventListener('load', function(){ markOrientation(im); });
+          // if the image is cached and already complete, mark immediately
+          if(im.complete) markOrientation(im);
+
           c.appendChild(im); grid.appendChild(c);
         });
         // ensure the gallery panel sits below the fixed header by measuring header height
