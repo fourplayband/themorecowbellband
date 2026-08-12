@@ -123,15 +123,22 @@
         currentIndex = ((index % currentImages.length) + currentImages.length) % currentImages.length;
         console.log('showImage ->', currentIndex, 'of', currentImages.length);
         try{ console.log('images preview', currentImages.slice(0,6)); }catch(e){}
-        lightboxImg.src = currentImages[currentIndex];
+        // resolve photo src safely for both legacy string entries and object entries
+        function getPhotoSrc(photo){
+          if(typeof photo === 'string') return photo;
+          if(photo && typeof photo === 'object') return photo.image || photo.full || photo.src || '';
+          return '';
+        }
+        console.log('lightbox src:', getPhotoSrc(currentImages[currentIndex]));
+        lightboxImg.src = getPhotoSrc(currentImages[currentIndex]);
         lightboxImg.setAttribute('data-index', currentIndex);
         lightboxImg.draggable = false;
         try{
           var len = currentImages.length;
           var prev = currentImages[((currentIndex - 1) % len + len) % len];
           var next = currentImages[(currentIndex + 1) % len];
-          if(prev){ var pi = new Image(); pi.src = prev; }
-          if(next){ var ni = new Image(); ni.src = next; }
+          if(prev){ var pi = new Image(); pi.src = getPhotoSrc(prev); }
+          if(next){ var ni = new Image(); ni.src = getPhotoSrc(next); }
         }catch(e){}
       }
 
@@ -156,7 +163,7 @@
       function openLightboxBySrc(src){
         // If gallery-grid exists, try to include its images as the set; otherwise use single src
         try{
-          const imgs = Array.from(document.querySelectorAll('#gallery-grid img')).map(i=>i.src).filter(Boolean);
+          const imgs = Array.from(document.querySelectorAll('#gallery-grid img')).map(i=> (i.dataset && i.dataset.full) ? i.dataset.full : i.src ).filter(Boolean);
           if(imgs && imgs.length){
             // place the src as the first image if not present
             currentImages = imgs.slice();
