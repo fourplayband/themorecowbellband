@@ -99,24 +99,19 @@ body, html {
 
 /* Default: landscape & square thumbnails continue to fill and crop */
 .gallery-grid img.landscape,
-.gallery-grid img.square {
+.gallery-grid img.square,
+.gallery-grid img.portrait {
+  /* all thumbnails use cover; focal point controlled via data-focus and JS */
   object-fit: cover;
   object-position: center center;
-}
-
-/* Portrait thumbnails: show entire image centered with dark translucent background in unused space */
-.gallery-grid img.portrait {
-  object-fit: contain;
-  object-position: center center;
-  background: rgba(0,0,0,0.35);
 }
 
 /* Support thumbnails injected into other grids (e.g., photo-item) */
 .photo-item { overflow:hidden; border-radius:8px; aspect-ratio: 1 / 1; background: rgba(0,0,0,0.35); }
 .photo-item img { width:100%; height:100%; display:block; }
 .photo-item img.landscape,
-.photo-item img.square { object-fit: cover; object-position: center center; }
-.photo-item img.portrait { object-fit: contain; object-position: center center; background: rgba(0,0,0,0.35); }
+.photo-item img.square,
+.photo-item img.portrait { object-fit: cover; object-position: center center; }
 .panel-close { position: absolute; right: 24px; top: 18px; background:#111;color:#fff;border:none;padding:8px 10px;border-radius:4px; cursor:pointer; }
 
 @media (max-width: 1024px) { .gallery-grid { grid-template-columns: repeat(2,1fr); } }

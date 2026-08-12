@@ -161,14 +161,28 @@ collections:
                 name: "images"
                 widget: "list"
                 required: false
-                # keep images as a list of single-image items, but make items collapsed by default
+                # keep images as a list of items but make them collapsed by default
                 collapsed: true
                 minimize_collapsed: true
+                # show a compact summary for collapsed items (image path)
                 summary: "{{fields.image}}"
-                field:
-                  label: "Image"
-                  name: "image"
-                  widget: "image"
+                # each item is an object with the existing image field plus a new optional focus setting
+                fields:
+                  - label: "Image"
+                    name: "image"
+                    widget: "image"
+                  - label: "Thumbnail Focus"
+                    name: "focus"
+                    widget: "select"
+                    required: false
+                    default: "auto"
+                    options:
+                      - { label: "Auto", value: "auto" }
+                      - { label: "Top", value: "top" }
+                      - { label: "Upper", value: "upper" }
+                      - { label: "Center", value: "center" }
+                      - { label: "Lower", value: "lower" }
+                      - { label: "Bottom", value: "bottom" }
 
 
   # ======================

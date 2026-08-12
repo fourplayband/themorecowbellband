@@ -277,21 +277,26 @@
       }
 
       function openGallery(gallery){
-        // normalize image entries: accept string paths or objects with common keys
+        // normalize image entries into objects: accept string paths or objects with common keys
         currentImages = (gallery.images||[]).map(function(i){
-          if(typeof i === 'string') return i;
-          if(!i || typeof i !== 'object') return '';
-          return i.image || i.src || i.path || i.url || '';
+          if(typeof i === 'string') return { full: i, focus: 'auto' };
+          if(!i || typeof i !== 'object') return null;
+          var full = i.image || i.src || i.path || i.url || '';
+          var focus = i.focus || 'auto';
+          return full ? { full: full, focus: focus } : null;
         }).filter(Boolean);
         galleryTitle.textContent = (gallery.year || 'Gallery');
         grid.innerHTML = '';
-        currentImages.forEach(function(src, i){
+        currentImages.forEach(function(item, i){
           const c = document.createElement('div'); c.className='card';
           const im = document.createElement('img');
+          var src = item.full;
+          var focus = item.focus || 'auto';
           var thumb = deriveThumb(src);
           im.src = thumb;
           im.alt = gallery.year + ' photo '+(i+1);
           im.setAttribute('data-full', src);
+          im.setAttribute('data-focus', focus);
           // prefer webp thumb; if it 404s, fall back to the original full image
           im.addEventListener('error', function(){ if(this.src !== src) this.src = src; });
 
@@ -308,17 +313,21 @@
           // add click to open lightbox
           im.addEventListener('click', function(){ openLightbox(i); });
 
-          // orientation detection: add portrait/landscape/square class after image loads
-          function markOrientation(img){
+          // apply focus/object-position on thumbnail after load
+          function applyFocus(imgEl, focusVal){
             try{
-              if(!img.naturalWidth || !img.naturalHeight) return;
-              if(img.naturalHeight > img.naturalWidth) img.classList.add('portrait');
-              else if(img.naturalHeight < img.naturalWidth) img.classList.add('landscape');
-              else img.classList.add('square');
-            }catch(e){ }
+              var posMap = { top: '50% 5%', upper: '50% 25%', center: '50% 50%', lower: '50% 70%', bottom: '50% 95%' };
+              imgEl.style.objectFit = 'cover';
+              if(!focusVal || focusVal === 'auto'){
+                if(imgEl.naturalHeight > imgEl.naturalWidth) imgEl.style.objectPosition = '50% 25%';
+                else imgEl.style.objectPosition = '50% 50%';
+              } else {
+                imgEl.style.objectPosition = posMap[focusVal] || '50% 50%';
+              }
+            }catch(e){}
           }
-          im.addEventListener('load', function(){ markOrientation(im); });
-          if(im.complete) markOrientation(im);
+          im.addEventListener('load', function(){ applyFocus(im, focus); });
+          if(im.complete) applyFocus(im, focus);
 
           c.appendChild(im); grid.appendChild(c);
         });

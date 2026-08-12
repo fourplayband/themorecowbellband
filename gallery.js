@@ -27,22 +27,29 @@
         var thumb = deriveThumbSync(src);
         img.src = thumb;
         img.setAttribute('data-full', src);
+        // default focus is auto for these generated thumbnails
+        img.setAttribute('data-focus', 'auto');
         img.addEventListener('error', function(){ if(this.src !== src) this.src = src; });
         img.setAttribute('loading', 'lazy');
         img.setAttribute('decoding', 'async');
         img.setAttribute('fetchpriority', 'low');
 
-        // orientation detection for thumbnails (portrait/landscape/square)
-        function markOrientation(i){
+        // apply focus/object-position on thumbnail after load
+        function applyFocus(i){
           try{
-            if(!i.naturalWidth || !i.naturalHeight) return;
-            if(i.naturalHeight > i.naturalWidth) i.classList.add('portrait');
-            else if(i.naturalHeight < i.naturalWidth) i.classList.add('landscape');
-            else i.classList.add('square');
+            var focusVal = i.dataset && i.dataset.focus ? i.dataset.focus : 'auto';
+            i.style.objectFit = 'cover';
+            if(!focusVal || focusVal === 'auto'){
+              if(i.naturalHeight > i.naturalWidth) i.style.objectPosition = '50% 25%';
+              else i.style.objectPosition = '50% 50%';
+            } else {
+              var posMap = { top: '50% 5%', upper: '50% 25%', center: '50% 50%', lower: '50% 70%', bottom: '50% 95%' };
+              i.style.objectPosition = posMap[focusVal] || '50% 50%';
+            }
           }catch(e){}
         }
-        img.addEventListener('load', function(){ markOrientation(img); });
-        if(img.complete) markOrientation(img);
+        img.addEventListener('load', function(){ applyFocus(img); });
+        if(img.complete) applyFocus(img);
         var wrapper = document.createElement('div');
         wrapper.className = 'photo-item';
         wrapper.style.breakInside = 'avoid';
