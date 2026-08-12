@@ -163,7 +163,6 @@ collections:
                 required: false
                 # keep images as a list of items but make them collapsed by default
                 collapsed: true
-                minimize_collapsed: true
                 # show a compact summary for collapsed items (image path)
                 summary: "{{fields.image}}"
                 # each item is an object with the existing image field plus a new optional focus setting
