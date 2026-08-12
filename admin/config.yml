@@ -170,18 +170,18 @@ collections:
                   - label: "Image"
                     name: "image"
                     widget: "image"
-                  - label: "Thumbnail Focus"
+                  - label: "Thumbnail Focus (Optional)"
                     name: "focus"
                     widget: "select"
                     required: false
                     default: "auto"
                     options:
-                        - "auto"
-                        - "top"
-                        - "upper"
-                        - "center"
-                        - "lower"
-                        - "bottom"
+                      - { label: "Auto", value: "auto" }
+                      - { label: "Top", value: "top" }
+                      - { label: "Upper", value: "upper" }
+                      - { label: "Center", value: "center" }
+                      - { label: "Lower", value: "lower" }
+                      - { label: "Bottom", value: "bottom" }
 
 
   # ======================
