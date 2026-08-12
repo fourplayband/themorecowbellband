@@ -1,0 +1,14 @@
+{
+  "name": "morecowbell-asset-tools",
+  "version": "1.0.0",
+  "description": "Tools to generate thumbnails and optimize site assets",
+  "scripts": {
+    "generate-thumbs": "node scripts/generate-thumbs.js",
+    "optimize-logo": "node scripts/optimize-logo.js"
+  },
+  "dependencies": {
+    "sharp": "^0.32.0",
+    "glob": "^8.0.0",
+    "fs-extra": "^11.0.1"
+  }
+}

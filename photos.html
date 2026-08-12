@@ -17,7 +17,10 @@
   <div class="max-w-[1600px] mx-auto px-8 py-3 flex items-center justify-between">
 
     <div class="flex items-center gap-2 whitespace-nowrap">
-      <img src="assets/logo-cowbell.png" class="h-14 md:h-16" style="filter: brightness(0) invert(1) opacity(0.92);" />
+      <picture>
+        <source srcset="assets/logo-cowbell.webp" type="image/webp">
+        <img src="assets/logo-cowbell.png" class="h-14 md:h-16" style="filter: brightness(0) invert(1) opacity(0.92);" />
+      </picture>
       <span class="text-2xl md:text-3xl font-extrabold text-[#f7eadb] tracking-wide"><span class="site-title-text">MORE COWBELL BAND</span></span>
     </div>
 
@@ -109,7 +112,7 @@
         if(!currentImages || !currentImages.length){
           console.log('showImage: no images in array, attempting DOM fallback');
           try{
-            const imgs = Array.from(document.querySelectorAll('#gallery-grid img')).map(i=>i.src).filter(Boolean);
+            const imgs = Array.from(document.querySelectorAll('#gallery-grid img')).map(function(i){ return i.dataset && i.dataset.full ? i.dataset.full : i.src; }).filter(Boolean);
             if(imgs && imgs.length){
               currentImages = imgs;
               console.log('showImage: populated currentImages from DOM fallback, count=', currentImages.length);
@@ -126,6 +129,13 @@
         lightboxImg.src = currentImages[currentIndex];
         lightboxImg.setAttribute('data-index', currentIndex);
         lightboxImg.draggable = false;
+        try{
+          var len = currentImages.length;
+          var prev = currentImages[((currentIndex - 1) % len + len) % len];
+          var next = currentImages[(currentIndex + 1) % len];
+          if(prev){ var pi = new Image(); pi.src = prev; }
+          if(next){ var ni = new Image(); ni.src = next; }
+        }catch(e){}
       }
 
       function openLightbox(index){
@@ -256,6 +266,19 @@
         });
       }
 
+      function deriveThumb(src){
+        try{
+          // build a .webp thumb in a 'thumbs' subfolder next to the source
+          var u = new URL(src, location.href);
+          var pathname = u.pathname; // /assets/uploads/photos/2026/photo.jpg
+          var parts = pathname.split('/');
+          var filename = parts.pop();
+          var dir = parts.join('/');
+          var name = filename.replace(/\.[^/.]+$/, '');
+          return dir + '/thumbs/' + name + '.webp';
+        }catch(e){ return src; }
+      }
+
       function openGallery(gallery){
         // normalize image entries: accept string paths or objects with common keys
         currentImages = (gallery.images||[]).map(function(i){
@@ -268,8 +291,23 @@
         currentImages.forEach(function(src, i){
           const c = document.createElement('div'); c.className='card';
           const im = document.createElement('img');
-          im.src = src;
+          var thumb = deriveThumb(src);
+          im.src = thumb;
           im.alt = gallery.year + ' photo '+(i+1);
+          im.setAttribute('data-full', src);
+          // prefer webp thumb; if it 404s, fall back to the original full image
+          im.addEventListener('error', function(){ if(this.src !== src) this.src = src; });
+
+          // loading priority: first 3 images load eagerly/high, rest lazy/low
+          if(i < 3){
+            im.setAttribute('fetchpriority', 'high');
+            // leave loading default (eager) for fastest first paint
+          } else {
+            im.setAttribute('loading', 'lazy');
+            im.setAttribute('decoding', 'async');
+            im.setAttribute('fetchpriority', 'low');
+          }
+
           // add click to open lightbox
           im.addEventListener('click', function(){ openLightbox(i); });
 
@@ -283,7 +321,6 @@
             }catch(e){ }
           }
           im.addEventListener('load', function(){ markOrientation(im); });
-          // if the image is cached and already complete, mark immediately
           if(im.complete) markOrientation(im);
 
           c.appendChild(im); grid.appendChild(c);

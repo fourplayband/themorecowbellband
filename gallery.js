@@ -8,9 +8,29 @@
     }).then(function(list){
       list.forEach(function(fn, idx){
         var img = document.createElement('img');
-        img.src = 'assets/photos/' + fn;
+        var src = 'assets/photos/' + fn;
         img.alt = fn;
         img.className = 'mb-4 rounded-xl shadow w-full block';
+
+        // derive thumbnail path next to the source: .../photos/thumbs/name.webp
+        function deriveThumbSync(s){
+          try{
+            var a = document.createElement('a'); a.href = s;
+            var pathname = a.pathname;
+            var parts = pathname.split('/');
+            var filename = parts.pop();
+            var dir = parts.join('/');
+            var name = filename.replace(/\.[^/.]+$/, '');
+            return dir + '/thumbs/' + name + '.webp';
+          }catch(e){ return s; }
+        }
+        var thumb = deriveThumbSync(src);
+        img.src = thumb;
+        img.setAttribute('data-full', src);
+        img.addEventListener('error', function(){ if(this.src !== src) this.src = src; });
+        img.setAttribute('loading', 'lazy');
+        img.setAttribute('decoding', 'async');
+        img.setAttribute('fetchpriority', 'low');
 
         // orientation detection for thumbnails (portrait/landscape/square)
         function markOrientation(i){
