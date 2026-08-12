@@ -18,14 +18,38 @@
     {
       "year": "MoreCowbell 2026 @ Wild Idol, Byron CA",
       "images": [
-        { "image": "/assets/uploads/band-photo.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/wild-idol-2.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/wild-idol-4.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/band.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/band-2.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/wild-idol-3.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/wild-idol-5.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/wild-idol-1.jpg", "focus": "auto" }
+        {
+          "image": "/assets/uploads/band-photo.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/wild-idol-2.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/wild-idol-4.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/band.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/band-2.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/wild-idol-3.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/wild-idol-5.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/wild-idol-1.jpg",
+          "focus": "auto"
+        }
       ],
       "cover": "/assets/uploads/band-photo.jpg"
     },
@@ -33,24 +57,78 @@
       "year": "Stampede 7-31-2026",
       "cover": "/assets/uploads/1.jpg",
       "images": [
-        { "image": "/assets/uploads/1.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/img_2422.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/img_2468.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/img_3213.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/img_8275.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/img_6637.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/img_6632.jpeg", "focus": "auto" },
-        { "image": "/assets/uploads/img_3209.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/img_2467.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/img_2450.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/img_2442.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/img_2428-2.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/img_2416.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/img_2414.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/img_2431.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/img_2428.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/img_2453.jpg", "focus": "auto" },
-        { "image": "/assets/uploads/ylfa9909.jpg", "focus": "auto" }
+        {
+          "image": "/assets/uploads/1.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/img_2422.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/img_2468.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/img_3213.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/img_8275.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/img_6637.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/img_6632.jpeg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/img_3209.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/img_2467.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/img_2450.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/img_2442.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/img_2428-2.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/img_2416.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/img_2414.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/img_2431.jpg",
+          "focus": "TOP"
+        },
+        {
+          "image": "/assets/uploads/img_2428.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/img_2453.jpg",
+          "focus": "auto"
+        },
+        {
+          "image": "/assets/uploads/ylfa9909.jpg",
+          "focus": "auto"
+        }
       ]
     }
   ]
