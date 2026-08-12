@@ -172,16 +172,10 @@ collections:
                     widget: "image"
                   - label: "Thumbnail Focus (Optional)"
                     name: "focus"
-                    widget: "select"
+                    widget: "string"
                     required: false
                     default: "auto"
-                    options:
-                      - { label: "Auto", value: "auto" }
-                      - { label: "Top", value: "top" }
-                      - { label: "Upper", value: "upper" }
-                      - { label: "Center", value: "center" }
-                      - { label: "Lower", value: "lower" }
-                      - { label: "Bottom", value: "bottom" }
+                    hint: "Enter: auto, top, upper, center, lower, or bottom"
 
 
   # ======================
