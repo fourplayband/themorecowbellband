@@ -10,8 +10,20 @@
       "year": "2026-Banner",
       "images": [
         {
-          "image": "/assets/uploads/meenars_11x17_morecowbell_1-16-26.jpg",
+          "focus": "auto",
+          "image": "/assets/uploads/morecowbell-banner.jpg"
+        },
+        {
+          "image": "/assets/uploads/wildidol-6-4-26-letter-size_v2.jpg",
           "focus": "auto"
+        },
+        {
+          "focus": "auto",
+          "image": "/assets/uploads/cowbell_meenar-letter-size.jpg"
+        },
+        {
+          "focus": "auto",
+          "image": "/assets/uploads/stampede-letter-size-7-31-26.jpg"
         }
       ]
     },
