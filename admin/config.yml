@@ -139,6 +139,8 @@ collections:
   # ======================
   - name: "photo_galleries"
     label: "Photo Galleries (index)"
+    editor:
+      preview: false
     files:
       - file: "content/photos/index.json"
         label: "Photo Galleries Index"
@@ -159,6 +161,10 @@ collections:
                 name: "images"
                 widget: "list"
                 required: false
+                # keep images as a list of single-image items, but make items collapsed by default
+                collapsed: true
+                minimize_collapsed: true
+                summary: "{{fields.image}}"
                 field:
                   label: "Image"
                   name: "image"
