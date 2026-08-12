@@ -133,6 +133,17 @@
         lightboxImg.src = getPhotoSrc(currentImages[currentIndex]);
         lightboxImg.setAttribute('data-index', currentIndex);
         lightboxImg.draggable = false;
+        // ensure very-wide banners display fully: toggle class based on natural dimensions
+        try{ lightboxImg.classList.remove('wide-banner'); }catch(e){}
+        lightboxImg.onload = function(){
+          try{
+            if(this.naturalWidth && this.naturalHeight && (this.naturalWidth / this.naturalHeight) > 1.8){
+              this.classList.add('wide-banner');
+            } else {
+              this.classList.remove('wide-banner');
+            }
+          }catch(e){}
+        };
         try{
           var len = currentImages.length;
           var prev = currentImages[((currentIndex - 1) % len + len) % len];

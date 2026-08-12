@@ -134,24 +134,37 @@ body, html {
 }
 
 .lightbox-inner {
-  width: min(1100px, 100%);
-  height: min(80vh, 720px);
+  /* size around the image instead of forcing fixed rectangle */
+  width: auto;
+  height: auto;
+  max-width: 96vw;
+  max-height: 90vh;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: hidden;
-  background: transparent; /* avoid white box */
+  overflow: visible;
+  background: transparent;
   border-radius: 12px;
 }
 
-#lightbox-img {
-  max-width: 95vw;
-  max-height: 85vh;
+/* Large lightbox image: preserve original aspect ratio, contain within viewport */
+#lightbox-img,
+.lightbox-img {
   width: auto;
   height: auto;
+  max-width: 96vw;
+  max-height: 88vh;
   object-fit: contain;
+  object-position: center;
   display: block;
+}
+
+/* Wider banners should use nearly full viewport width */
+.lightbox-img.wide-banner,
+#lightbox-img.wide-banner {
+  max-width: 98vw;
+  max-height: 85vh;
 }
 
 #lightbox-close {
